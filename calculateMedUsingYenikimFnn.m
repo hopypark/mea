@@ -29,7 +29,7 @@ tmpnames=cell(numTotalShiftBlock * numWells,1);
 [files,path] = uigetfile({'*.mat'}, 'Select One or More Files', 'D:\002.matlab\yenikim\data\','MultiSelect','On');
 [r, filesLen] = size(files); % # number of selected files
 tic
-
+disp([num2str(filesLen) ' files selected.'])
 for ifile = 1:filesLen
 
     elects = load([path files{1,ifile}],'Electrodes');
@@ -132,7 +132,7 @@ tableValue.electrode23 = fnn1(:,6);
 tableValue.electrode31 = fnn1(:,7);
 tableValue.electrode33 = fnn1(:,8);
 
-writetable(tableValue,[path 'myData.csv'],'Delimiter',',','QuoteStrings',false)
+writetable(tableValue,[path files{1,1}(1,1:22) '.f_fnn.csv'],'Delimiter',',','QuoteStrings',false)
 toc
 
 
