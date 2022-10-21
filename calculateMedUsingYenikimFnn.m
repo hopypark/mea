@@ -28,8 +28,8 @@ tmpnames=cell(numTotalShiftBlock * numWells,1);
 
 [files,path] = uigetfile({'*.mat'}, 'Select One or More Files', 'D:\002.matlab\yenikim\data\','MultiSelect','On');
 [r, filesLen] = size(files); % # number of selected files
-tic
 disp([num2str(filesLen) ' files selected.'])
+tic
 for ifile = 1:filesLen
 
     elects = load([path files{1,ifile}],'Electrodes');
@@ -86,7 +86,6 @@ for ifile = 1:filesLen
 %     numCurrShiftBlock = 0;
 
 
-    tic
     displog = sprintf('%s - %02d/%02d..............%06.2f%% Completed.', files{1,ifile}, ifile, numWells , ifile/numWells*100);
     disp(displog)
 
