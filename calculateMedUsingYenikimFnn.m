@@ -137,6 +137,7 @@ tableValue.electrode23 = fnn1(:,6);
 tableValue.electrode31 = fnn1(:,7);
 tableValue.electrode33 = fnn1(:,8);
 
+% write a table to csv file
 writetable(tableValue,[path files{1,1}(1,1:22) '.f_fnn.csv'],'Delimiter',',','QuoteStrings',false)
 toc
 
