@@ -1,3 +1,9 @@
+%
+% 1. load a raw data
+% 2. normalization - standardization scaler
+% 3. calculate the MED(Minimal Embedding Dimension) of 1's raw electrode waveform using f_fnn.m
+% 4. export results to a csv file for 1 plate
+%
 clc
 clearvars
 
