@@ -127,11 +127,11 @@ for wrows = 1:numWellRows
         well.WellName = wellname;
         tmpname = strrep(file, '.raw', ['.' wellname '.mat']);
         % if 'mat' subfolder is not exist, then make subfolder that name is 'mat'
-        if not(exist('mat', 'dir'))
-            mkdir('mat')
+        if not(exist(tmpname, 'dir'))
+            mkdir([tmpname '\mat'])
         end
         %
-        % save a well data(8 electrods) to .mat file 
+        % save a well data(data of 8-electrode) to .mat file 
         save(['mat\' tmpname],'-struct', 'well');        
     end
 end
