@@ -107,8 +107,8 @@ well.info=[];
 for wrows = 1:numWellRows
     for wcols = 1:numWellCols
         % extract electrodes data for a well 
-        for ecols = 1: 3
-            for erows = 1 : 3
+        for ecols = 1:3
+            for erows = 1:3
                 try
                     e=AllData{wrows, wcols, ecols,erows}.Data;
                     %sprintf('%d, %d array is waveform.', ecols , erows)
@@ -126,9 +126,15 @@ for wrows = 1:numWellRows
         wellname=[ROW_NAME{1, AllData{wrows, wcols, 3, 3}.Channel.WellRow} sprintf('%02d',AllData{wrows, wcols, 3, 3}.Channel.WellColumn)];
         well.WellName = wellname;
         tmpname = strrep(file, '.raw', ['.' wellname '.mat']);
-        save(tmpname,'-struct', 'well');        
+        % if 'mat' subfolder is not exist, then make subfolder that name is 'mat'
+        if not(exist('mat', 'dir'))
+            mkdir('mat')
+        end
+        %
+        % save a well data(8 electrods) to .mat file 
+        save(['mat\' tmpname],'-struct', 'well');        
     end
 end
-
+% end
 
 
