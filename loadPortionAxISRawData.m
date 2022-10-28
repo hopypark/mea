@@ -9,7 +9,7 @@ clear;
 
 [files, path] = uigetfile({'*.raw';'*.*'},'Select One or More Files','D:\002.matlab\yenikim\data','MultiSelect','Off');
 
-[r, filesLen] = size(files); % # number of selected files
+[r, filesLen] = size(files,1); % # number of selected files
 disp([num2str(filesLen) ' files selected.'])
 
 %disp([path file])
@@ -18,6 +18,8 @@ cd(path)
 
 % constant
 ROW_NAME = {'A','B','C','D','E','F','G','H'};
+NUMBER_WELLS_ROW = 8; 
+NUMBER_WELLS_COL = 12; 
 
 % A12 --> [ ROW_NAME{1,2} num2str(a) ]
 
@@ -25,9 +27,9 @@ ROW_NAME = {'A','B','C','D','E','F','G','H'};
 % load a 4-dimensional cell arry which contains the raw data for each electrode in every well.
 % (Well Rows) X (Well Columns) X (Electrode Columns) X (Electrode Rows)
 % - Well Row(8):    A, B, ... ,H
-numWellRows = 8;
+numWellRows = NUMBER_WELLS_ROW;
 % - Well Column(12): 1, 2, ... ,12
-numWellCols = 12;
+numWellCols = NUMBER_WELLS_COL;
 
 
 % for ifile = 1:filesLen
@@ -38,6 +40,17 @@ tic
 %    AllData = AxisFile([path files{1,ifile}]).DataSets.LoadData;
     AllData = AxisFile([path files]).DataSets.LoadData;
     disp('Loading Complete')
+
+    % check row size
+    if size(AllData, 1) ~= NUMBER_WELLS_ROW
+        numWellRows = size(AllData, 1);
+    end
+
+    % check column size
+    if size(AllData, 2) ~= NUMBER_WELLS_COL
+        numWellCols = size(AllData, 2);
+    end    
+    %
 
 %     [filepath, name, ext] = fileparts(files{1,ifile});
     [filepath, name, ext] = fileparts(files);
