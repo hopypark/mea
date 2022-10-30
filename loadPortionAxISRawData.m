@@ -7,9 +7,9 @@
 % 
 clear;
 
-[files, path] = uigetfile({'*.raw';'*.*'},'Select One or More Files','D:\002.matlab\yenikim\data','MultiSelect','Off');
+[files, path] = uigetfile({'*.raw';'*.*'},'Select One or More Files','D:\002.matlab\yenikim\data','MultiSelect','On');
 
-[r, filesLen] = size(files,1); % # number of selected files
+[r, filesLen] = size(files); % # number of selected files
 disp([num2str(filesLen) ' files selected.'])
 
 %disp([path file])
@@ -20,25 +20,28 @@ cd(path)
 ROW_NAME = {'A','B','C','D','E','F','G','H'};
 NUMBER_WELLS_ROW = 8; 
 NUMBER_WELLS_COL = 12; 
-
-% A12 --> [ ROW_NAME{1,2} num2str(a) ]
+% example) A12 --> [ ROW_NAME{1,2} num2str(a) ]
 
 % All data
+% /////////////////////////////
 % load a 4-dimensional cell arry which contains the raw data for each electrode in every well.
 % (Well Rows) X (Well Columns) X (Electrode Columns) X (Electrode Rows)
 % - Well Row(8):    A, B, ... ,H
+
 numWellRows = NUMBER_WELLS_ROW;
+
 % - Well Column(12): 1, 2, ... ,12
 numWellCols = NUMBER_WELLS_COL;
+% /////////////////////////////
 
-
-% for ifile = 1:filesLen
 tic
-    % - one signal per electrode
-    disp(['Loading...' files])
+for ifile = 1:filesLen % multi-file selection
 
-%    AllData = AxisFile([path files{1,ifile}]).DataSets.LoadData;
-    AllData = AxisFile([path files]).DataSets.LoadData;
+    % - one signal per electrode
+    disp(['Loading...' files{1,ifile}])
+
+    AllData = AxisFile([path files{1,ifile}]).DataSets.LoadData;
+%     AllData = AxisFile([path files]).DataSets.LoadData;
     disp('Loading Complete')
 
     % check row size
@@ -52,8 +55,8 @@ tic
     end    
     %
 
-%     [filepath, name, ext] = fileparts(files{1,ifile});
-    [filepath, name, ext] = fileparts(files);
+     [filepath, name, ext] = fileparts(files{1,ifile}); % mulitfiles
+%    [filepath, name, ext] = fileparts(files); % single file
     % %%
     % well.info=[];
     % for wrows = 1:numWellRows
@@ -129,38 +132,49 @@ tic
     well.info=[];
     for wrows = 1:numWellRows
         for wcols = 1:numWellCols
-            % extract electrodes data for a well 
+            % fixing exception raised using unused well index.
+            try 
+                % making well name using row and column index of well.
+                wellname=[ROW_NAME{1, AllData{wrows, wcols, 3, 3}.Channel.WellRow} sprintf('%02d',AllData{wrows, wcols, 3, 3}.Channel.WellColumn)];
+            catch ME
+                msg = sprintf('Exception: Using unused well index...%d,%d' , wrows, wcols);                disp(msg)
+                continue;
+            end
+
+            % extract electrodes data for a well                        
             for ecols = 1:3
                 for erows = 1:3
                     try
-                        e=AllData{wrows, wcols, ecols,erows}.Data;
+                        %e=AllData{wrows, wcols, ecols,erows}.Data;
                         %sprintf('%d, %d array is waveform.', ecols , erows)
                          %str = 'sprintf("electrode%d%d.row=AllData{%d, %d, %d, %d}.Data;",ecols,erows,wrows,wcols,ecols,erows)';
                          eval(sprintf("well.Electrodes.electrode%d%d.Row= %d;",ecols,erows, erows));
                          eval(sprintf("well.Electrodes.electrode%d%d.Column=%d;",ecols,erows,ecols));
                          eval(sprintf("well.Electrodes.electrode%d%d.Data=AllData{%d, %d, %d, %d}.Data;",ecols,erows,wrows,wcols,ecols,erows));
                     catch
-                        msg=sprintf('%d, %d array is empty.', ecols , erows);
+                        msg=sprintf('Electrode - %d, %d in the well(%d, %d) is empty.', ecols, erows, wrows, wcols);
                         disp(msg)
                         continue;
                     end
                 end
             end % end of a well
-            wellname=[ROW_NAME{1, AllData{wrows, wcols, 3, 3}.Channel.WellRow} sprintf('%02d',AllData{wrows, wcols, 3, 3}.Channel.WellColumn)];
+            
+            % making a filename 
             well.WellName = wellname;
             tmpname = [name '.' wellname '.mat'];
+
             % if 'mat' subfolder is not exist, then make subfolder that name is 'mat'
             if not(exist(name, 'dir'))
                 mkdir([name '\mat'])
             end
             %
             % save a well data(data of 8-electrode) to .mat file 
-            save([name '\mat\' tmpname],'-struct', 'well');        
+            save([name '\mat\' tmpname],'-struct', 'well');  
         end
     end
     % end
 
-%     emsg=sprintf('%03d/%03d files completed.\n',ifile,  num2str(filesLen));
-%     disp(emsg)
-% end % for files
+    emsg=sprintf('%03d/%03d files completed.\n',ifile,  filesLen);
+    disp(emsg)
+end % for files
 toc
