@@ -42,6 +42,7 @@ numWells = NUMBER_WELLS;
 %
 
 electsNames = {'electrode11';'electrode12';'electrode13';'electrode21';'electrode22';'electrode23';'electrode31';'electrode33'};
+electsNames9 = {'electrode11';'electrode12';'electrode13';'electrode21';'electrode22';'electrode23';'electrode31';'electrode32';'electrode33'};
 numElects = size(electsNames,1);
 wellsname = '';
 
@@ -65,10 +66,21 @@ for ifile = 1:filesLen
     %     wellsname = files(1,24:26);
 
     enames = fieldnames(elects.Electrodes);
-    if ~compareCellStrings(electsNames, enames)
-        disp('Two cell array is not equal.')
-        break;
+    if size(enames,1) ~=  NUMBER_ELECTRODES
+        numElects = size(enames,1);
+        electsNames = electsNames9;
+        nCols = size(enames,1);
+        if ~compareCellStrings(electsNames9, enames)
+            disp('Two cell array is not equal.')
+            break;
+        end        
+    else
+        if ~compareCellStrings(electsNames, enames)
+            disp('Two cell array is not equal.')
+            break;
+        end        
     end
+    % 
 
     %
     % % 0.2s block
@@ -110,10 +122,10 @@ for ifile = 1:filesLen
     %     numTotalShiftBlock = 20;
     %     numCurrShiftBlock = 0;
 
-    displog = sprintf('%s - %02d/%02d..............%06.2f%% Completed.', files{1,ifile}, ifile, filesLen , ifile/filesLen*100);
+    displog = sprintf('%s - %02d/%02d..............%06.2f%% Started.', files{1,ifile}, ifile, filesLen , ifile/filesLen*100);
     disp(displog)
 
-    nRows = size(elects.Electrodes.(electsNames{1,1}).Data, 1) / SAMPLE_NUMBER_SECOND; % return # of 1s block
+    nRows = ceil(size(elects.Electrodes.(electsNames{1,1}).Data, 1) / SAMPLE_NUMBER_SECOND); % return # of 1s block
     numTotalShiftBlock = nRows/shiftblock; % 20(10 minutes data) or 30(15 minutes data )
     %
     % block unit variables
@@ -145,9 +157,9 @@ for ifile = 1:filesLen
     end % electrodes
 
     % add to global variable
-    fnn = [fnn; fnn1]; fnn1=[];
-    wellnames = [wellnames; wellname]; wellname=[];
-
+    fnn = [fnn; fnn1]; 
+    wellnames = [wellnames; wellname]; 
+    clear elects  fnn1 wellsname;
 end
 
 %
@@ -164,6 +176,5 @@ end
 %writetable(tableValue,[path files{1,1}(1,1:22) '.f_fnn.csv'],'Delimiter',',','QuoteStrings',false)
 writetable(tableValue,[strrep(path,'mat\','') files{1,1}(1,1:22) '.f_fnn.csv'],'Delimiter',',','QuoteStrings',false)
 toc
-
 
 
