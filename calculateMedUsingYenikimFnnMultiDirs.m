@@ -203,7 +203,8 @@ for idx = 1:numDirs
     %writetable(tableValue,[path files{1,1}(1,1:22) '.f_fnn.csv'],'Delimiter',',','QuoteStrings',false)
     cd('..');
     writetable(tableValue,[filesInDir(ifile,1).name(1,1:22) '.f_fnn.csv'],'Delimiter',',','QuoteStrings',false)
-    
+    cd('..');
+    writetable(tableValue,[filesInDir(ifile,1).name(1,1:22) '.f_fnn.csv'],'Delimiter',',','QuoteStrings',false)
 end % end of loop for folders
 
 toc
