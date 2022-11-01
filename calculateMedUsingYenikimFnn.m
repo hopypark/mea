@@ -177,4 +177,3 @@ end
 writetable(tableValue,[strrep(path,'mat\','') files{1,1}(1,1:22) '.f_fnn.csv'],'Delimiter',',','QuoteStrings',false)
 toc
 
-
