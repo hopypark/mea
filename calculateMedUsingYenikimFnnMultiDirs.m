@@ -141,7 +141,7 @@ for idx = 1:numDirs
         disp(displog)
     
         nRows = ceil(size(elects.Electrodes.(electsNames{1,1}).Data, 1) / SAMPLE_NUMBER_SECOND); % return # of 1s block
-        numTotalShiftBlock = round(nRows/shiftblock); % 20(10 minutes data) or 30(15 minutes data )
+        %numTotalShiftBlock = round(nRows/shiftblock); % 20(10 minutes data) or 30(15 minutes data )
         %
         % block unit variables
         fnn1=[];%zeros(numTotalShiftBlock, nCols);
