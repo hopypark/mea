@@ -126,11 +126,11 @@ for ifile = 1:filesLen
     disp(displog)
 
     nRows = ceil(size(elects.Electrodes.(electsNames{1,1}).Data, 1) / SAMPLE_NUMBER_SECOND); % return # of 1s block
-    numTotalShiftBlock = nRows/shiftblock; % 20(10 minutes data) or 30(15 minutes data )
+    numTotalShiftBlock = round(nRows/shiftblock); % 20(10 minutes data) or 30(15 minutes data )
     %
     % block unit variables
-    fnn1=zeros(numTotalShiftBlock, nCols);
-    wellname=cell(numTotalShiftBlock,1);
+    fnn1=[];%zeros(numTotalShiftBlock, nCols);
+    wellname=[];%cell(numTotalShiftBlock,1);
 
     for iCol = 1:numElects
         disp(['electrode name: ' electsNames{iCol,1}])

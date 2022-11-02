@@ -74,7 +74,7 @@ for idx = 1:numDirs
     disp(msg)
 
     for ifile = 1:filesLen
-        disp(['Loading...' filesInDir(ifile,1).name ' in ' subDirs{1,idx}])
+        disp(['Loading...' filesInDir(ifile,1).name ' in the ' subDirs{1,idx}])
         elects = load(filesInDir(ifile,1).name,'Electrodes');
     
         wname = filesInDir(ifile,1).name(1,24:26); % A01, A02, ..., A12, B01, ..., B12, ... , H12
@@ -141,11 +141,11 @@ for idx = 1:numDirs
         disp(displog)
     
         nRows = ceil(size(elects.Electrodes.(electsNames{1,1}).Data, 1) / SAMPLE_NUMBER_SECOND); % return # of 1s block
-        numTotalShiftBlock = nRows/shiftblock; % 20(10 minutes data) or 30(15 minutes data )
+        numTotalShiftBlock = round(nRows/shiftblock); % 20(10 minutes data) or 30(15 minutes data )
         %
         % block unit variables
-        fnn1=zeros(numTotalShiftBlock, nCols);
-        wellname=cell(numTotalShiftBlock,1);
+        fnn1=[];%zeros(numTotalShiftBlock, nCols);
+        wellname=[];%cell(numTotalShiftBlock,1);
         idxEmptyElectrode = []; 
         
         for iCol = 1:numElects
