@@ -3,9 +3,9 @@
 % 2. normalization - standardization scaler
 % 3. calculate the MED(Minimal Embedding Dimension) of 1's raw electrode waveform using f_fnn.m
 % 4. export results to a csv file for 1 plate
-%
+% 
 clc
-clearvars
+clearvars 
 
 % variables about f_fnn
 %%
@@ -61,7 +61,7 @@ numDirs = size(subDirs,2);
 % get a list of subfolders in the current folder.
 % - loop for folders
 for idx = 1:numDirs
-    cd([baseDirectory '\' subDirs{1,idx} '\mat\']);
+    cd([baseDirectory '\' subDirs{1,idx}]);
 
     %
     % global variables for FNN and wellnames
@@ -140,7 +140,8 @@ for idx = 1:numDirs
         displog = sprintf('%s - %02d/%02d..............%06.2f%% Started.', filesInDir(ifile,1).name, ifile, filesLen , ifile/filesLen*100);
         disp(displog)
     
-        nRows = ceil(size(elects.Electrodes.(electsNames{1,1}).Data, 1) / SAMPLE_NUMBER_SECOND); % return # of 1s block
+        %nRows = ceil(size(elects.Electrodes.(electsNames{1,1}).Data, 1) / SAMPLE_NUMBER_SECOND); % return # of 1s block
+        nRows = round(size(elects.Electrodes.(electsNames{1,1}).Data, 1) / SAMPLE_NUMBER_SECOND); % return # of 1s block
         %numTotalShiftBlock = round(nRows/shiftblock); % 20(10 minutes data) or 30(15 minutes data )
         %
         % block unit variables
@@ -198,7 +199,8 @@ for idx = 1:numDirs
         end
         eval(sprintf('tableValue.%s = fnn(:,%d);',electsNames{i,1},i));
     end
-    
+    fmsg = sprintf('Current file idx --------------------------------------> %03d/%03d\n', idx,numDirs);
+    disp(fmsg)
     % write a table to csv file
     %writetable(tableValue,[path files{1,1}(1,1:22) '.f_fnn.csv'],'Delimiter',',','QuoteStrings',false)
     cd('..');

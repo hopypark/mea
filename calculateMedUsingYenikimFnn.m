@@ -57,6 +57,7 @@ fnn=[];%zeros(numTotalShiftBlock * numWells, nCols);
 wellnames=[];%cell(numTotalShiftBlock * numWells,1);
 
 tic
+
 for ifile = 1:filesLen
 
     elects = load([path files{1,ifile}],'Electrodes');
@@ -125,16 +126,27 @@ for ifile = 1:filesLen
     displog = sprintf('%s - %02d/%02d..............%06.2f%% Started.', files{1,ifile}, ifile, filesLen , ifile/filesLen*100);
     disp(displog)
 
-    nRows = ceil(size(elects.Electrodes.(electsNames{1,1}).Data, 1) / SAMPLE_NUMBER_SECOND); % return # of 1s block
+    %nRows = ceil(size(elects.Electrodes.(electsNames{1,1}).Data, 1) / SAMPLE_NUMBER_SECOND); % return # of 1s block
+    nRows = round(size(elects.Electrodes.(electsNames{1,1}).Data, 1) / SAMPLE_NUMBER_SECOND); % return # of 1s block
     %numTotalShiftBlock = round(nRows/shiftblock); % 20(10 minutes data) or 30(15 minutes data )
     %
     % block unit variables
     fnn1=[];%zeros(numTotalShiftBlock, nCols);
     wellname=[];%cell(numTotalShiftBlock,1);
-
+    idxEmptyElectrode = []; 
     for iCol = 1:numElects
         disp(['electrode name: ' electsNames{iCol,1}])
-        elecData = double(elects.Electrodes.(electsNames{iCol,1}).Data);
+%         elecData = double(elects.Electrodes.(electsNames{iCol,1}).Data);
+            try
+                elecData = double(elects.Electrodes.(electsNames{iCol,1}).Data);
+            catch
+                sprintf('%s is empty.',electsNames{iCol,1});
+%                 electsNames = setdiff(electsNames,electsNames(iCol,1)); % remove a empty cell 
+%                 numElects = numElects - 1; 
+                idxEmptyElectrode = [idxEmptyElectrode iCol];
+                continue;    
+            end
+
         %         nRows = size(elecData, 1) / SAMPLE_NUMBER_SECOND; % return # of 1s block
         for iRow = 1:shiftblock:nRows % downsampling - 30초 shift => 600개 중 20개 계산
             numCurrShiftBlock = numCurrShiftBlock + 1;
@@ -168,12 +180,18 @@ end
 tableValue = table;
 
 tableValue.wellname = wellnames;
-for i=1:numElects
-    eval(sprintf('tableValue.%s = fnn(:,%d);',electsNames{i,1},i));
-end
+% for i=1:numElects
+%     eval(sprintf('tableValue.%s = fnn(:,%d);',electsNames{i,1},i));
+% end
+    for i=1:numElects
+        if ~isempty(idxEmptyElectrode) && ~isempty(find(idxEmptyElectrode == i,1))  
+            continue;
+        end
+        eval(sprintf('tableValue.%s = fnn(:,%d);',electsNames{i,1},i));
+    end
 
 % write a table to csv file
 %writetable(tableValue,[path files{1,1}(1,1:22) '.f_fnn.csv'],'Delimiter',',','QuoteStrings',false)
-writetable(tableValue,[strrep(path,'mat\','') files{1,1}(1,1:22) '.f_fnn.csv'],'Delimiter',',','QuoteStrings',false)
+ writetable(tableValue,[path files{1,1}(1,1:22) '.f_fnn.csv'],'Delimiter',',','QuoteStrings',false)
 toc
 
