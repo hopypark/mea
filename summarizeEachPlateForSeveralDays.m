@@ -82,3 +82,19 @@ for ifile = 1:filesLen
 end %  for ifiles
 
 %
+% row well - Autism(A~D), Control(E~H)
+% col well 
+% - plate1: H20(1~6), IGF(7~12) 
+% - plate2: H20(1~6), IGF(7~12) 
+% - plate3: DMSO(1~6), RSP(7~12) 
+% - plate4: DMSO(1~6), RSP(7~12) 
+
+fnns.fileinfo=cellFiles;
+fnns.results=finalResult;
+fnns.dim1 = 'file index';
+fnns.dim2 = 'row well index';
+fnns.dim3 = 'col well index';
+fnns.dim4 = 'measure index';
+fnns.dim4info = '1-mode, 2-mean, 3-min';
+save([strDirPath 'plate4_summaryDays.mat'], 'fnns');
+
