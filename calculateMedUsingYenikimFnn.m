@@ -11,7 +11,7 @@ clearvars
 %%
 MAXIMUM_DIM = 10;
 TIME_DELAY = 2;
-R_THRESHOLD = 10;
+R_THRESHOLD = 15; % 10 --> 15. updated 2022.12.16
 A_THRESHOLD = 2;
 % constant variable
 max_dimension = MAXIMUM_DIM;
