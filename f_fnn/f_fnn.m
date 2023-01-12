@@ -10,35 +10,39 @@ function [FNN] = f_fnn(x,tao,mmax,rtol,atol)
 %atol=2;
 N=length(x);
 Ra=std(x,1);
+fnnPerc=100;
 
-for m=1:mmax
-   % fprintf('Current Dim = %d\n', m);
-%     M=N-m*tao; 
+for m=2:mmax
+    M=N-m*tao;    
 %     Y=psr_deneme(x,m,tao,M);    
-    M=N-(m-1)*tao;         
-    Y=psr_deneme(x,m,tao);    
-    
-%     [r,c]=size(Y);
-%     fprintf('R = %d, C= %d\n', r, c)    
-    
-    tfnn(m,1)=0; 
-    %tfnn = zeros(m,1);% updated by PKT
-    %size(Y)
-    for n=1:M        
-        y0=ones(M,1)*Y(n,:);
-        distance=sqrt(sum((Y-y0).^2,2));
-        [neardis nearpos]=sort(distance);
-                
-        D=abs(Y(n,m)-Y(nearpos(2),m)); % 동등  %D=abs(x(n+m*tao)-x(nearpos(2)+m*tao));
-        R=sqrt(D.^2+neardis(2).^2);
-        if D/neardis(2) > rtol || R/Ra > atol
-             tfnn(m,1)=tfnn(m,1)+1;
+%     M=N-(m-1)*tao;
+    Y=psr_deneme(x,m,tao,M);    
+%     FNN(m,1)=0;
+    FNN=[];
+    try
+        for n=1:M
+            y0=ones(M,1)*Y(n,:);
+            distance=sqrt(sum((Y-y0).^2,2));
+            [neardis nearpos]=sort(distance);
+            
+            D=abs(x(n+m*tao)-x(nearpos(2)+m*tao));
+            R=sqrt(D.^2+neardis(2).^2);
+            if D/neardis(2) > rtol || R/Ra > atol
+%                 FNN(m,1)=FNN(m,1)+1;
+                FNN(n)=1;
+            else
+                FNN(n)=0;
+            end
+            
         end
-
+    catch ME
+        disp(['Exception: ' ME.message])
     end
+    fnnPerc(m) = 100*sum(FNN)/length(FNN);    
 end
+FNN = fnnPerc;
+% FNN=(FNN./FNN(1,1))*100;
 
-FNN=(tfnn./tfnn(1,1))*100;
 % figure
 % plot(1:length(FNN),FNN)
 % grid on;
@@ -62,8 +66,7 @@ else
 end
 
 Y=zeros(M,m); 
-%si = [1:tao:m*tao];
+
 for i=1:m
     Y(:,i)=x((1:M)+(i-1)*tao)';
-     %Y(:,i)=x(si(1,i):si(1,i)+M-1,1);
 end
