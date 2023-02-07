@@ -32,11 +32,14 @@ for i = 1:nec
 %             ts=[AllData{2,2,i,j}(:).Start];
             % Calculating Attend Entropy
             size(ts,2)
+            
+            fprintf('Calculating Attendtion Entropy nec = %d, ner = %d ....................', i,j)
             if size(ts,2) > 20                
                 [Attn, Hxx, Hnn, Hxn, Hnx]=AttnEn(diff(ts(1,:)));
                 attnEntValue((i-1)*ner+j,:) = [Attn, Hxx, Hnn, Hxn, Hnx];
-                fprintf('nec = %d, ner = %d, # AttnEn = %d\n', i,j, attnEntValue((i-1)*ner+j,1));
+%                 fprintf('nec = %d, ner = %d, # AttnEn = %d\n', i,j, attnEntValue((i-1)*ner+j,1));
             end
+            fprintf('end\n');
 
             hold on;
             %Plot a vertical line at each
