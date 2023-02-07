@@ -6,18 +6,18 @@ COL_WELLNAME = 1:12;
 
 
 % file selection
-[file,path] = uigetfile({'*.spk'}, 'Select One or More Files', 'D:\00.Workspace\00.Matlab\mea\testData\spk','MultiSelect','Off');
+[file,path] = uigetfile({'*.mat'}, 'Select One or More Files', 'D:\001.workspace\001.matlab\yenikim\testData\raw_mat\','MultiSelect','Off');
 
 
 % which electrode?
-disp(wellname)
+disp(ROW_WELLNAME)
 wrow = input('which is row number of well? ','s');
 wcol = input('which is col number of well? ','s');
 
 
 
 %AllData = AxisFile('D:\00.Workspace\00.Matlab\mea\testData\spk\plate1_2016.07.12(000).spk').DataSets.LoadData;
-AllData = AxisFile([path file]).DataSets.LoadData;
+%AllData = AxisFile('D:\00.Workspace\00.Matlab\mea\testData\spk\plate1_2016.07.26(000).spk').DataSets.LoadData;
 [nwr, nwc, nec, ner]=size(AllData);
 
 figure('Position',[100, 200, 900, 500]);
@@ -44,11 +44,8 @@ for i = 1:nec
     end
 end
 
-title(strrep(file,'_','-'),'FontSize',13);
+title('plate1-2016.07.26(000).spk','FontSize',13);
 xlabel('time(sec)');ylabel('electrode');
-x1=[200 200]; y1=[0 -9];
-x2=[400 400]; y2=[0 -9];
-line(x1,y1,'Color','red','LineWidth',2);line(x2,y2,'Color','red','LineWidth',2);
 grid on;box on;
 % figure;
 % [r,c] = size(AllData{2,1,1,1});
