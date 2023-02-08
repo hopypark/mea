@@ -6,7 +6,7 @@ COL_WELLNAME = 1:12;
 ROW_WELLNAME = {'A','B','C','D','E','F','G','H'};
 
 % file selection
-[files,path] = uigetfile({'*.spk'}, 'Select One or More Files', 'D:\00.Workspace\00.Matlab\mea\testData\spk\run1_spk\','MultiSelect','On');
+[files,path] = uigetfile({'*.spk'}, 'Select One or More Files', 'D:\00.Workspace\00.Matlab\mea\testData\spk\run2_spk\','MultiSelect','On');
 
 if ~iscell(files)
     file = files;
