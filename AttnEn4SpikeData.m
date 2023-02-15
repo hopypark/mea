@@ -58,7 +58,7 @@ for m = 1:nwr
 %                     hold off;
 
                 else
-                    continue;
+                    %continue;
 %                     hold on;
 %                     ts=0;
 %                     fprintf('nec = %d, ner = %d, # spikes = %d, \n', i,j, size(ts,2)-1);
@@ -74,7 +74,7 @@ for m = 1:nwr
     end % for nwc
 end % for nwr
 
-save([path strrep(strrep(files{1, nloop},'.spk','.AttnEn.mat'),'_','-')], 'attnEntAvgValue');
+% save([path strrep(strrep(files{1, nloop},'.spk','.AttnEn.mat'),'_','-')], 'attnEntAvgValue');
 end % for nloop, file loop
 
 
