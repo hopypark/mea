@@ -136,7 +136,8 @@ tic
     idxEmptyElectrode = []; 
     fc = zeros(8,1);
     mig = zeros(8,1);
-    eidx = 1;
+%     eidx = 1;
+    tic
     for iCol = 1:numElects
         try
             elecData = double(elects.Electrodes.(electsNames{iCol,1}).Data);
@@ -148,8 +149,8 @@ tic
 
             binData = zeros(length(elecData),1);
             binData(locs(r,1),1)=1;
-            [fc(eidx,1), mig(eidx,1)] = fc_2017(binData,3,1,2);
-            eidx = eidx + 1;
+            [fc(iCol,1), mig(iCol,1)] = fc_2017(binData,3,1,2);
+            %eidx = eidx + 1;
         catch
             fprintf('%s is empty.\n',electsNames{iCol,1});
             continue;
@@ -180,7 +181,7 @@ tic
 %         numCurrShiftBlock = 0;
 
     end % electrodes
-
+    toc
     % add to global variable
 %     fnn = [fnn; fnn1]; 
 %     wellnames = [wellnames; wellname]; 
@@ -205,5 +206,5 @@ tic
 % 
 % % write a table to csv file
 % writetable(tableValue,[path files{1,1}(1,1:22) '.f_fnn.csv'],'Delimiter',',','QuoteStrings',false)
-toc
+% toc
 

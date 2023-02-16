@@ -32,9 +32,7 @@ attnEnControl1 = zeros(8*48,15); % 8 - #electrode, 15 - # day, excluding e32
 
 % Plate1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % run1
-[files1,path1] = uigetfile({'*.mat'}, 'Select One or More Files', 'D:\00.Workspace\00.Matlab\mea\testData\spk\run1_spk\plate2','MultiSelect','On');
-% run2
-% [files1,path1] = uigetfile({'*.mat'}, 'Select One or More Files', 'D:\00.Workspace\00.Matlab\mea\testData\spk\run2_spk\plate1','MultiSelect','On');
+[files1,path1] = uigetfile({'*.mat'}, 'Select One or More Files', 'D:\00.Workspace\00.Matlab\mea\testData\spk\run1_spk\plate1','MultiSelect','On');
 
 if ~iscell(files1)
     file = files1;
@@ -44,9 +42,7 @@ end
 
 % Plate3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % run1
-[files2,path2] = uigetfile({'*.mat'}, 'Select One or More Files', 'D:\00.Workspace\00.Matlab\mea\testData\spk\run1_spk\plate4','MultiSelect','On');
-% run2
-% [files2,path2] = uigetfile({'*.mat'}, 'Select One or More Files', 'D:\00.Workspace\00.Matlab\mea\testData\spk\run2_spk\plate3','MultiSelect','On');
+[files2,path2] = uigetfile({'*.mat'}, 'Select One or More Files', 'D:\00.Workspace\00.Matlab\mea\testData\spk\run1_spk\plate3','MultiSelect','On');
 
 if ~iscell(files2)
     file = files2;
@@ -62,8 +58,8 @@ for nloop=1:length(files1) % file loop
     load([path1 files1{1, nloop}]);
     % Autism
     for nwr = 1:4
-%         for nwc = 1:6  % for H2O or DMSO
-        for nwc = 7:12  % for IGF or RSP           
+        for nwc = 1:6  % for H2O or DMSO
+%         for nwc = 7:12  % for IGF or RSP           
 %             eval(sprintf('attnEnAutism(((nwr-1)*6+(nwc-1)*9+1):((nwr-1)*6+(nwc)*9), %d)=attnEntAvgValue.well%s%02d;',nloop, ROW_WELLNAME{1,nwr},nwc));            
             eval(sprintf('tempAttnEn=attnEntAvgValue.well%s%02d;', ROW_WELLNAME{1,nwr},nwc));            
             eval(sprintf('attnEnAutism1(%d:%d, %d)=tempAttnEn([1:7 9], 1);',(nNum-1)*8+1, nNum*8, nloop));            
@@ -78,8 +74,8 @@ for nloop=1:length(files2) % file loop
     load([path2 files2{1, nloop}]);
     % Autism
     for nwr = 1:4
-%         for nwc = 1:6  % for H2O or DMSO
-        for nwc = 7:12  % for IGF or RSP 
+        for nwc = 1:6  % for H2O or DMSO
+%         for nwc = 7:12  % for IGF or RSP 
             eval(sprintf('tempAttnEn=attnEntAvgValue.well%s%02d;', ROW_WELLNAME{1,nwr},nwc));            
 %             eval(sprintf('attnEnAutism1(:, %d)=attnEnAutism1(:, %d)+tempAttnEn([1:7 9], 1);',nloop, nloop)); 
             eval(sprintf('attnEnAutism1(%d:%d, %d)=tempAttnEn([1:7 9], 1);',(nNum-1)*8+1, nNum*8, nloop));            
@@ -97,8 +93,8 @@ for nloop=1:length(files1) % file loop
     load([path1 files1{1, nloop}]);
     % Control
     for nwr = 5:8
-%         for nwc = 1:6  % for H2O or DMSO
-        for nwc = 7:12  % for IGF or RSP
+        for nwc = 1:6  % for H2O or DMSO
+%         for nwc = 7:12  % for IGF or RSP
             eval(sprintf('tempAttnEn=attnEntAvgValue.well%s%02d;', ROW_WELLNAME{1,nwr},nwc));
 %             eval(sprintf('attnEnControl1(:, %d)=attnEnControl1(:, %d)+tempAttnEn([1:7 9], 1);',nloop, nloop));            
             eval(sprintf('attnEnControl1(%d:%d, %d)=tempAttnEn([1:7 9], 1);',(nNum-1)*8+1, nNum*8, nloop));            
@@ -113,8 +109,8 @@ for nloop=1:length(files2) % file loop
     load([path2 files2{1, nloop}]);
     % Control
     for nwr = 5:8
-%         for nwc = 1:6  % for H2O or DMSO
-        for nwc = 7:12  % for IGF or RSP  
+        for nwc = 1:6  % for H2O or DMSO
+%         for nwc = 7:12  % for IGF or RSP  
             eval(sprintf('tempAttnEn=attnEntAvgValue.well%s%02d;', ROW_WELLNAME{1,nwr},nwc));
 %             eval(sprintf('attnEnControl1(:, %d)=attnEnControl1(:, %d)+tempAttnEn([1:7 9], 1);',nloop, nloop));            
             eval(sprintf('attnEnControl1(%d:%d, %d)=tempAttnEn([1:7 9], 1);',(nNum-1)*8+1, nNum*8, nloop));            
@@ -127,9 +123,17 @@ end
 
 % plot
 figure;
-plot(mean(attnEnAutism1), 'ro-');
-hold on;plot(mean(attnEnControl1), 'bs-'); 
-title('Mean-AttnEn of Plate2 & Plate4, RSP');
+%plot(mean(attnEnAutism1), 'ro-');
+errorbar(DATE_TO_DAY_TICK, mean(attnEnAutism1), std(attnEnAutism1)./sqrt(length(attnEnAutism1)),'ro-');
+% STD
+% errorbar(DATE_TO_DAY_TICK, mean(attnEnAutism1), std(attnEnAutism1),'ro-');
+hold on;
+plot(mean(attnEnControl1), 'bs-'); 
+errorbar(DATE_TO_DAY_TICK, mean(attnEnControl1), std(attnEnControl1)./sqrt(length(attnEnControl1)),'bs-');
+% STD
+% errorbar(DATE_TO_DAY_TICK, mean(attnEnControl1), std(attnEnControl1),'bs-');
+
+title('Mean-AttnEn of Plate1 & Plate3, H2O');
 
 xticks(DATE_TO_DAY_TICK);
 xticklabels(DATE_TO_DAY);
@@ -138,6 +142,9 @@ xlim([0 16]); %run1
 xlabel('Days');ylabel('mean AttnEn');
 legend({'Autism','Control'});
 grid on;
+
+% student-t test
+[h,p,ci,stat]=ttest2(attnEnAutism1, attnEnControl1);
 
 % plot %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Plate1, Plate3: Control & Autism
