@@ -53,6 +53,7 @@ for iFile = 1:filesLen
 
     fc = zeros(8,96);
     mig = zeros(8,96);
+    attn = zeros(8,96);
     npks = zeros(8,96);
 %     eidx = 1;
     tic
@@ -78,6 +79,7 @@ for iFile = 1:filesLen
             binData = zeros(length(outData),1);
             binData(locs(r,1),1)=1;
             [fc(iCol,iFile), mig(iCol,iFile)] = fc_2017(binData,3,1,2);
+            
             %eidx = eidx + 1;
         catch ME
             fprintf('%s is empty. %s\n',electsNames{iCol,1}, ME.message);
