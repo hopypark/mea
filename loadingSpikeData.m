@@ -18,6 +18,7 @@ AllData = AxisFile([path file]).DataSets.LoadData;
 [nwr, nwc, nec, ner]=size(AllData);
 
 % 
+tsISI = cell(9,1);
 attnEntValue=zeros(9, 5); % 9-number of electode, 5 - AttnEn(aveg, max-max, min-min, max-min, min-max)
 %
 
@@ -31,15 +32,15 @@ for i = 1:nec
 %         if ~isempty(AllData{2,2,i,j}) % In case of having spike(s)
 %             ts=[AllData{2,2,i,j}(:).Start];
             % Calculating Attend Entropy
-            size(ts,2)
             
-            fprintf('Calculating Attendtion Entropy nec = %d, ner = %d ....................', i,j)
+            fprintf('Calculating Attendtion Entropy nec = %d, ner = %d, # spikes = %d ....................', i,j, size(ts,2))
             if size(ts,2) > 20                
                 [Attn, Hxx, Hnn, Hxn, Hnx]=AttnEn(diff(ts(1,:)));
                 attnEntValue((i-1)*ner+j,:) = [Attn, Hxx, Hnn, Hxn, Hnx];
 %                 fprintf('nec = %d, ner = %d, # AttnEn = %d\n', i,j, attnEntValue((i-1)*ner+j,1));
             end
             fprintf('end\n');
+            tsISI{(i-1)*3+j,1} = ts;
 
             hold on;
             %Plot a vertical line at each

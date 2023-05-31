@@ -9,7 +9,7 @@ ROW_WELLNAME = {'A','B','C','D','E','F','G','H'};
 [file,path] = uigetfile({'*.spk'}, 'Select One or More Files', 'D:\00.Workspace\00.Matlab\mea\testData\spk','MultiSelect','Off');
 
 % which electrode?
-disp(wellname)
+disp(['Well''s row name: ' wellname])
 wrow = input('which is row number of well? ','s');
 wcol = input('which is col number of well? ','s');
 
@@ -46,7 +46,7 @@ for i = 1:nec
             %Plot a vertical line at each
             plot([ts;ts],-(i-1)*ner-j+[0.75*ones(size(ts));zeros(size(ts))],'k'); 
             fprintf('nec = %d, ner = %d, # spikes = %d\n', i,j, size(ts,2));
-            text(605, -(i-1) * ner - j + 0.5, sprintf('E%d%d=%d',i,j,size(ts,2)));
+            text(605, -(i-1) * ner - j + 0.5, sprintf('E%d%d = %4d',i,j,size(ts,2)));
             %timepoint corresponding to a spike
             hold off;
 
@@ -55,7 +55,7 @@ for i = 1:nec
             ts=0;
             fprintf('nec = %d, ner = %d, # spikes = %d, \n', i,j, size(ts,2)-1);
             plot([ts;ts],-(i-1)*ner-j+[0.75*ones(size(ts));zeros(size(ts))],'k');
-            text(605, -(i-1) * ner - j + 0.5, sprintf('E%d%d=%d',i,j,0));
+            text(605, -(i-1) * ner - j + 0.5, sprintf('E%d%d = %4d',i,j,0));
             hold off;
         end
     end
@@ -63,9 +63,9 @@ end
 
 title(sprintf('%s(Well - %s%s)',strrep(file,'_','-'), ROW_WELLNAME{1, str2double(wrow)} ,wcol),'FontSize',13);
 xlabel('time(sec)');ylabel('electrode');
-x1=[200 200]; y1=[0 -9];
-x2=[400 400]; y2=[0 -9];
-line(x1,y1,'Color','red','LineWidth',2);line(x2,y2,'Color','red','LineWidth',2);
+% x1=[200 200]; y1=[0 -9];
+% x2=[400 400]; y2=[0 -9];
+% line(x1,y1,'Color','red','LineWidth',2);line(x2,y2,'Color','red','LineWidth',2);
 grid on;box on;
 
 T=array2table(attnEntValue,'VariableNames',{'Attn', 'Hxx', 'Hnn', 'Hxn', 'Hnx'});
